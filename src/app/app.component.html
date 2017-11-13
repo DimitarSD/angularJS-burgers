@@ -1,0 +1,210 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1 id="title">
+    Welcome to {{title}}
+  </h1>
+  <img width="150" src="https://images.vexels.com/media/users/3/129607/isolated/lists/f526eafda1a791f4a93b1ad7c62161e5-burgers-logo-1.png">
+</div>
+
+<div style="text-align:center">
+    <h1 id="subtitle">Our available burgers today:</h1>
+</div>
+
+<div class="container">
+  <ng-container *ngFor="let burger of data">
+    <div class="row burger">
+      <div class="col-ld-2">
+          <img src="{{burger.imageUrl}}" class="burger-image">
+      </div>
+      <div class="col-ld-10">
+        <div class="row">
+          <div class="col-ld-12">
+            <span class="burger-name">
+                {{burger.name}}
+            </span>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-ld-12">
+                <span class="burger-size">
+                    Burger size: {{burger.burgerSize}}
+                </span>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-ld-6">
+                <span class="burger-ingredients">
+                    Ingredients:
+                    <ng-container *ngFor="let ingredient of burger.ingredients">
+                        <span>{{ingredient}}</span>
+                    </ng-container>
+                </span>
+            </div>
+            <div class="col-ld-6">
+                <span class="burger-sauces">
+                    Sauces: 
+                    <span>
+                        {{burger.sauces}}
+                    </span>
+                    <span *ngIf="!burger.sauces.length">No sauces</span>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-ld-10">
+            </div>
+            <div class="col-ld-2">
+                <span class="burger-id">
+                    Id: 
+                    <span>
+                        {{burger.burgerId}}
+                    </span>
+                </span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <h1 id="second-title" style="text-align:center">
+      Wanna add new burger?
+  </h1>
+
+  <form [formGroup]="formGroup" (ngSubmit)="createBurger(formGroup.value)">
+      <div class="form-group">
+        <label for="inputBurgerName">Name</label>
+        <input type="text" class="form-control" id="inputBurgerName" formControlName="burger_name">
+        <div class="alert" *ngIf="!formGroup.controls['burger_name'].valid && formGroup.controls['burger_name'].touched">Name is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="burgerSizeSelect">Burger size</label>
+        <select class="form-control" id="burgerSizeSelect" formControlName="burger_size">
+          <option>small</option>
+          <option>medium</option>
+          <option>large</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+          <label for="inputIngredients">Ingredients</label>
+          <input type="text" class="form-control" id="inputIngredients" aria-describedby="ingredientsHelp" formControlName="burger_ingredients">
+          <small id="ingredientsHelp" class="form-text text-muted">List your burger ingredients separated by a comma</small>
+          <div class="alert" *ngIf="!formGroup.controls['burger_ingredients'].valid && formGroup.controls['burger_ingredients'].touched">Add some ingredients :)</div>
+      </div>
+
+      <div class="form-group">
+          <label for="burgerSaucesSelect">Sauces</label>
+          <select multiple class="form-control" id="burgerSaucesSelect" formControlName="burger_sauces">
+            <option>Mustard</option>
+            <option>Ketchup</option>
+            <option>Barbecue sauce</option>
+          </select>
+      </div>
+
+      <div class="form-group">
+          <label for="inputBurgerImage">Burger image</label>
+          <input type="text" class="form-control" id="inputBurgerImage" formControlName="burger_imageUrl">
+          <div class="alert" *ngIf="!formGroup.controls['burger_imageUrl'].valid && formGroup.controls['burger_imageUrl'].touched">Burger image is required</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="!formGroup.valid">Create my new burger</button>
+  </form>
+
+  <h1 id="second-title" style="text-align:center">
+      Find your burger
+  </h1>
+
+  <form [formGroup]="searchGroup" (ngSubmit)="searchBurger(searchGroup.value)">
+      <fieldset class="form-group row">
+        <legend class="col-form-legend col-sm-2">Search burger:</legend>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="gridRadios" id="byName" value="option1" checked (change)="onSelectionChange(1)">
+              By burger name
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2" (change)="onSelectionChange(2)">
+              By burger ingredients
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" (change)="onSelectionChange(3)">
+              By burger id
+            </label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-group">
+          <label for="inputBurgerName">Search box</label>
+          <input type="text" class="form-control" id="inputBurgerName" formControlName="search_input">
+          <small id="ingredientsHelp" class="form-text text-muted">Type your data</small>
+          <div class="alert" *ngIf="!searchGroup.controls['search_input'].valid && searchGroup.controls['search_input'].touched">Search field cannot be empty</div>
+      </div>
+
+      <button type="submit" class="btn btn-warning" [disabled]="!searchGroup.valid">Search burger</button>
+  </form>
+
+  <ng-container *ngFor="let burger of findedData">
+      <div class="row burger">
+        <div class="col-ld-2">
+            <img src="{{burger.imageUrl}}" class="burger-image">
+        </div>
+        <div class="col-ld-10">
+          <div class="row">
+            <div class="col-ld-12">
+              <span class="burger-name">
+                  {{burger.name}}
+              </span>
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-ld-12">
+                  <span class="burger-size">
+                      Burger size: {{burger.burgerSize}}
+                  </span>
+                </div>
+          </div>
+          <div class="row">
+              <div class="col-ld-6">
+                  <span class="burger-ingredients">
+                      Ingredients:
+                      <ng-container *ngFor="let ingredient of burger.ingredients">
+                          <span>{{ingredient}}</span>
+                      </ng-container>
+                  </span>
+              </div>
+              <div class="col-ld-6">
+                  <span class="burger-sauces">
+                      Sauces: 
+                      <span>
+                          {{burger.sauces}}
+                      </span>
+                      <span *ngIf="!burger.sauces.length">No sauces</span>
+                  </span>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-ld-10">
+              </div>
+              <div class="col-ld-2">
+                  <span class="burger-id">
+                      Id: 
+                      <span>
+                          {{burger.burgerId}}
+                      </span>
+                  </span>
+              </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+</div>
+
+
